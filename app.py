@@ -224,6 +224,18 @@ with st.sidebar:
 
     run = st.button("🚀 Fetch & Summarize", type="primary")
 
+def _get_openai_client():
+    api_key = (
+        st.session_state.get("OPENAI_API_KEY")
+        or st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+    )
+    if not api_key:
+        st.error("Missing OPENAI_API_KEY (set env var, add to Secrets, or enter it in the sidebar).")
+        st.stop()
+    return OpenAI(api_key=api_key)
+
+
+
 # ===============================
 # Run pipeline
 # ===============================
@@ -325,5 +337,10 @@ if run:
         file_name=f"company_update_mna_jv_{start_str}_{end_str}_openai.csv",
         mime="text/csv"
     )
+    st.subheader("OpenAI API key")
+    api_key_input = st.text_input("Enter key (kept only for this session)", type="password")
+    if api_key_input:
+        st.session_state["OPENAI_API_KEY"] = api_key_input.strip()
+
 else:
     st.info("Pick your date range and click **Fetch & Summarize**.")
