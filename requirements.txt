@@ -1,33 +1,13 @@
-# --- Core ---
-streamlit>=1.36
-requests>=2.32
-pandas>=2.2
-numpy>=1.26
-
-# --- PDF text extractors (multi-engine) ---
-pymupdf>=1.24
-pypdfium2>=4.30
-pdfminer.six>=20240706
-pdfplumber>=0.11.3
-pypdf>=4.3.1
-
-# --- (Optional but recommended) OCR ---
-pdf2image>=1.17.0
-pytesseract>=0.3.13
-
-# --- NLP + utilities for clean sentence insights ---
-spacy>=3.7
-scikit-learn>=1.4
-rapidfuzz>=3.9
-networkx>=3.3
-
-# --- (Optional) Stronger PDF parser; comment out if heavy in your env ---
-# unstructured[pdf]>=0.14.7
-# unstructured-inference>=0.7.33
-# layoutparser[layoutmodels,tesseract]>=0.3.4
-
-streamlit>=1.36
-requests>=2.32
-pandas>=2.2
-openai>=1.88
-
+streamlit
+requests
+pandas
+numpy
+PyMuPDF
+pdfplumber
+pdfminer.six
+pypdf
+pdf2image
+pytesseract
+scikit-learn
+xlsxwriter
+pillow
