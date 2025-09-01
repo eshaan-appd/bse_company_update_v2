@@ -25,3 +25,9 @@ networkx>=3.3
 # unstructured[pdf]>=0.14.7
 # unstructured-inference>=0.7.33
 # layoutparser[layoutmodels,tesseract]>=0.3.4
+
+streamlit>=1.36
+requests>=2.32
+pandas>=2.2
+openai>=1.88
+
