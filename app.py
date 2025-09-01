@@ -208,6 +208,11 @@ with st.sidebar:
     today = datetime.now().date()
     start_date = st.date_input("Start date", value=today - timedelta(days=1), max_value=today)
     end_date   = st.date_input("End date", value=today, max_value=today, min_value=start_date)
+    st.subheader("OpenAI API key")
+    api_key_input = st.text_input("Enter key (sk-…)", type="password", help="Stored for this session only")
+    if api_key_input:
+        st.session_state["OPENAI_API_KEY"] = api_key_input.strip()
+
 
     st.divider()
     st.subheader("OpenAI")
@@ -224,15 +229,40 @@ with st.sidebar:
 
     run = st.button("🚀 Fetch & Summarize", type="primary")
 
-def _get_openai_client():
+from openai import OpenAI
+import os, streamlit as st
+
+def _get_openai_client(debug: bool = False):
+    def _strip_quotes(s: str | None):
+        if not s: return s
+        s = s.strip()
+        if (s.startswith('"') and s.endswith('"')) or (s.startswith("'") and s.endswith("'")):
+            return s[1:-1]
+        return s
+
+    # priority: sidebar > st.secrets > env
     api_key = (
         st.session_state.get("OPENAI_API_KEY")
         or st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", ""))
     )
+    api_key = _strip_quotes(api_key)
+
+    if debug:
+        src = ("sidebar" if "OPENAI_API_KEY" in st.session_state else
+               "secrets" if "OPENAI_API_KEY" in st.secrets else
+               "env")
+        st.sidebar.caption(f"🔑 Key source: {src} • present: {'yes' if bool(api_key) else 'no'}" + (f" • endswith: {api_key[-4:]}" if api_key else ""))
+
     if not api_key:
         st.error("Missing OPENAI_API_KEY (set env var, add to Secrets, or enter it in the sidebar).")
         st.stop()
-    return OpenAI(api_key=api_key)
+
+    try:
+        return OpenAI(api_key=api_key)
+    except Exception as e:
+        st.error(f"OpenAI client init failed: {e}")
+        st.stop()
+
 
 
 
