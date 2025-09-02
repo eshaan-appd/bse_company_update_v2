@@ -15,6 +15,28 @@ if not api_key:
     st.stop()
 
 client = OpenAI(api_key=api_key)
+
+with st.expander("🔍 OpenAI connection diagnostics", expanded=False):
+    # 1) Is the key visible?
+    key_src = "st.secrets" if "OPENAI_API_KEY" in st.secrets else "env"
+    mask = lambda s: (s[:7] + "..." + s[-4:]) if s and len(s) > 12 else "unset"
+    st.write("Key source:", key_src)
+    st.write("API key (masked):", mask(st.secrets.get("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")))
+
+    # 2) Can we list models? (auth + project/perm sanity)
+    try:
+        _ = client.models.list()
+        st.success("Models list ok — auth + project look good.")
+    except Exception as e:
+        st.error(f"Models list failed: {e}")
+
+    # 3) Can we call a tiny Responses echo? (billing/quota often shows up here)
+    try:
+        r = client.responses.create(model="gpt-4.1-mini", input="ping")
+        st.success("Responses call ok.")
+    except Exception as e:
+        st.error(f"Responses call failed: {e}")
+
 # =========================================
 # Streamlit UI
 # =========================================
