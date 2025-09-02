@@ -5,12 +5,16 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 import pandas as pd
 import numpy as np
-import streamlit as st
-
-# ---- OpenAI (Responses API) ----
 from openai import OpenAI
-client = OpenAI(api_key=os.getenv("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"))
+import os, streamlit as st
+# ---- OpenAI (Responses API) ----
 
+api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
+if not api_key:
+    st.error("Missing OPENAI_API_KEY (set env var or add to Streamlit secrets).")
+    st.stop()
+
+client = OpenAI(api_key=api_key)
 # =========================================
 # Streamlit UI
 # =========================================
