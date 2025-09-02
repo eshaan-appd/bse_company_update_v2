@@ -9,7 +9,7 @@ import streamlit as st
 
 # ---- OpenAI (Responses API) ----
 from openai import OpenAI
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=os.getenv("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"))
 
 # =========================================
 # Streamlit UI
